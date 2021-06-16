@@ -1,1 +1,32 @@
-gggg
+library(ggplot2)
+library(readxl)
+library(caTools)
+mydata=readxl::read_excel("C:/Users/HP/Downloads/student csv.xlsx")
+str(mydata)
+nrow(mydata)
+summary(mydata)
+ggplot(mydata,aes(Hours,Scores))+geom_point
+------------#splitting train and test-------------
+split_value=sample.split(mydata$Scores,SplitRatio = 0.8)
+train_sample=subset(mydata,split_value==T)
+nrow(train_sample)
+test_sample=subset(mydata,split_value==F)
+nrow(test_sample)
+-----------#creating linear model--------------------------
+plot(mydata)
+x=mydata$Hours
+y=mydata$Scores
+model=lm(y~x,train_sample)
+------------#prediction------------------
+p=predict(model,mydata,type="response")
+print(summary(model))
+head(p)
+View(mydata)
+result=predict(object=model,newdata = test_sample)
+result
+rmse=sqrt(mean((mydata$Scores-result)^2))
+rmse
+---------#final result-----------
+a=data.frame(x=9.25)
+finalresult=predict(model,a)
+finalresult
